@@ -12,14 +12,17 @@ export default class Component {
         const render = compile(getOuterHTML(el)); //? compile 做了哪些事情？
         this._el.innerHTML = '';
         //? 这里的 _proxy 是干什么的？
-        //! 本文件后面解释了，是把 options 中 data 都放到了实例的 _data 里面，并设置 getter/setter
+        //! 本文件后面解释了，是把 options 中 data 通过 getter, setter 都放到了实例的 _data 里面
         Object.keys(options.data).forEach(key => this._proxy(key));
         if (options.methods) {
             Object.keys(options.methods).forEach(key => {
                 this[key] = options.methods[key].bind(this);
             })
         }
-        this._ob = observe(options.data); //? 这里的 observe 应该是监控数据的变化
+        //? 这里的 observe 应该是监控数据的变化
+        //! 猜测：应该就是因为在这里就监控了 data 的变化，并且这里的数据都是通过 options 传进来的
+        //! 所以在 vue 对象实例化之后再给 data 添加东西便不能监控了
+        this._ob = observe(options.data);
         this._watchers = [];
         this._watcher = new Watcher(this, render, this._update); //? 这个 watchers 就是文档中说的 watch？怎么实现的？
         this._update(this._watcher.value);
@@ -85,3 +88,5 @@ export default class Component {
 
 Component.prototype.__h__ = h;
 Component.nextTick = nextTick;
+
+// 很多疑惑，接下来准备看 ../observe/array.js
