@@ -214,6 +214,8 @@ export function classify(str) {
  * 实现一个 bind，比原生的快
  * 传说中的柯里化，据说犀牛书上也有一种实现，不知道和这个一不一样，还没看呢
  * JavaScript 语言精萃上也有一个实现，是不是这样的我也忘记了...
+ * -- 上面的注释有误，这个不是柯里化，只是简单的绑定 context
+ * 所以才会比原生快的吧...我好坑...
  * 
  * @param {Function} fn 
  * @param {Object} ctx
@@ -222,13 +224,25 @@ export function classify(str) {
 export function bind(fn, ctx) {
     return function (a) {
         var l = arguments.length;
-        // 这样不行吗？是不是更简单？
-        // return l === 1 ? fn.call(ctx, a) : fn.apply(ctx, arguments);
+        //? 这样不行吗？是不是更简单？
+        //? return l === 1 ? fn.call(ctx, a) : fn.apply(ctx, arguments);
+        //! 看了 observe/array.js 里面，介绍了参数泄露(leaking arguments)
+        //! 这里不会出现参数泄露吗？
+        //！ apply 第二个参数还可以是一个 Array Like 啊
         return l
             ? l > 1
                 ? fn.apply(ctx, arguments)
                 : fn.call(ctx, a)
             : fn.call(ctx);
+    }
+}
+
+// 我又简单实现了一个柯里化
+Function.prototype.curry = function (context) {
+    var func = this;
+    var args = Array.prototype.slice.call(arguments, 1);
+    return function () {
+        return func.apply(context, args.concat(Array.prototype.slice.call(arguments)));
     }
 }
 
