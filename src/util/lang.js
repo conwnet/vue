@@ -226,7 +226,7 @@ export function bind(fn, ctx) {
         var l = arguments.length;
         //? 这样不行吗？是不是更简单？
         //? return l === 1 ? fn.call(ctx, a) : fn.apply(ctx, arguments);
-        //! 看了 observe/array.js 里面，介绍了参数泄露(leaking arguments)
+        //! 看了 observer/array.js 里面，介绍了参数泄露(leaking arguments)
         //! 这里不会出现参数泄露吗？
         //！ apply 第二个参数还可以是一个 Array Like 啊
         return l
@@ -266,6 +266,9 @@ export function toArray(list, start) {
 
 /**
  * 浅拷贝吧
+ * //! 哇，之前傻了，原来是把 from 对象中的属性扩展到
+ * //! to 对象中，看名字也应该看出来呀...重名的还会覆盖...
+ * //! 看了 observer/watcher.js 里面用到了这个回来看才反应过来
  * 
  * @param {Object} to 
  * @param {Object} from 
@@ -309,7 +312,7 @@ export const isArray = Array.isArray;
 
 
 /**
- * 原来在这！在 observe/array.js 里面看到了，上去就是这东西
+ * 原来在这！在 observer/array.js 里面看到了，上去就是这东西
  * 还不知道是啥，原来就是 defineProperty 的改写啊...
  * 
  * @param {Object} obj 

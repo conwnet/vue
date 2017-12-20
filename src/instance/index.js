@@ -89,4 +89,4 @@ export default class Component {
 Component.prototype.__h__ = h;
 Component.nextTick = nextTick;
 
-// 很多疑惑，接下来准备看 ../observe/array.js
+// 很多疑惑，接下来准备看 ../observer/array.js
