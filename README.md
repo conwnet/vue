@@ -31,3 +31,7 @@
 对于普通的对象，直接对它的所有可枚举属性执行监控操作。
 
 还有很多的小细节不懂，比如这里用到了 observe/dep.js 里面的东西，但是不知道用来干啥了。还有比如 Observer 对象原型中的 vms 又是干啥的呢。
+
+### 1月1日
+
+看了 compiler/html-parser.js 里面发现引用了一个 html-parser，主要用于把 html 字符串转成 AST。
