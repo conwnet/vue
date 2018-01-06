@@ -39,6 +39,7 @@ export default class Component {
     }
 
     //? 这是干啥呢...
+    //! 在 compiler/codegen.js 里面看到了，原来是用来合并 html 中的 :class 和 class 属性
     _renderClass (dynamic, cls) {
         dynamic = dynamic
             ? typeof dynamic === 'string'
@@ -50,7 +51,7 @@ export default class Component {
             : dynamic
     }
 
-    //! 把一个二维数组展开成一维数组
+    //! 把一个二维数组展开成一维数组，为什么不使用 Array.prototype.concat 实现呢？
     __flatten__ (arr) {
         var res = [];
         for (var i = 0, l = arr.length; i < l; i++) {

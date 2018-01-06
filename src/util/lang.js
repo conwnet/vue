@@ -385,7 +385,7 @@ function throttle(func, wait) {
 export function indexOf(arr, obj) {
     var i = arr.length;
     while (i--) {
-        if (arr[i] === obj[i]) return i;
+        if (arr[i] === obj) return i;
     }
     return -1;
 }

@@ -88,7 +88,7 @@ function makeMap(values) {
 }
 
 // 使用正则表达式来处理 标签名 和 属性
-var singleAttrIndentifier = /([^\s"'<>\/=]+)/,
+var singleAttrIdentifier = /([^\s"'<>\/=]+)/,
     singleAttrAssign = /=/,
     singleAttrAssigns = [singleAttrAssign],
     singleAttrValues = [
