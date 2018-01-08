@@ -190,6 +190,7 @@ function toUpper(c) {
  * @param {String} str 
  * @return {String}
  */
+var hyphenateRE = /([a-z\d])([A-Z])/;
 export function hyphenate(str) {
     return str
     .replace(hyphenateRE, '$1-$2')

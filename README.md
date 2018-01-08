@@ -37,4 +37,9 @@
 看了 compiler/html-parser.js 里面发现引用了一个 html-parser，主要用于把 html 字符串转成 AST。
 
 ### 1月6日
+
 主要是阅读了 compiler 里面的内容，有很多不懂的地方。添加了单测的代码，用来在接下来不懂的地方直接动手测试运行。
+
+### 1月8日
+
+读了 util/dom.js，里面封装了很多操作 dom 的方法。
