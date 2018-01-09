@@ -43,3 +43,7 @@
 ### 1月8日
 
 读了 util/dom.js，里面封装了很多操作 dom 的方法。
+
+### 1月9日
+
+读了 util/env.js，里面主要是实习了 nextTick，还有一堆 transition 和 animation 的东西，猜测是 Vue 文档中过渡那一部分用到的。
