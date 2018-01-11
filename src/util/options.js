@@ -52,15 +52,29 @@ strats.data = function (parentVal, childVal, vm) {
         if (!parentVal) {
             return childVal;
         }
-        return function mergeDataFn() {
+        return function mergedDataFn() {
             return mergeData(
                 childVal.call(this),
                 parentVal.call(this)
             );
         }
-    } else {
-
+    } else if (parentVal || childVal) {
+        return function mergedInstanceDataFn() {
+            var instanceData = typeof childVal === 'function'
+                ? childVal.call(vm)
+                : childVal
+            var defaultData = typeof parentVal === 'function'
+                ? parentVal.call(vm)
+                : undefined;
+            if (instanceData) {
+                return mergeData(instanceData, defaultData);
+            } else {
+                return defaultData;
+            }
+        }
     }
 }
+
+
 
 
