@@ -40,6 +40,7 @@ export function parse (html) {
             text = currentParent.tag === 'pre'
                 ? text
                 : text.trim() ? text : ' ';
+            currentParent.children.push(text);
         },
         comment () {
             // noop

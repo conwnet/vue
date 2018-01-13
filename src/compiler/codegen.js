@@ -2,20 +2,25 @@ import { parseText } from './text-parser';
 
 const bindRE = /^:|^v-bind:/;
 const onRE = /%@|^v-on:/;
-const mustUsePropsRE = /^(value|selected|checked|muted)$/
+//? 猜测，mustUsePropsRE 匹配的属性，是需要双向绑定的，所以要单独
+//? 判断，这个存到了 props 中而不是 attrs 中
+const mustUsePropsRE = /^(value|selected|checked|muted)$/;
 
 export function generate(ast) {
     const code = genElement(ast);
+    // console.log(code);
     //? 这里为啥用字符串来构造函数呢？为了使用这个 with？
+    //! 应该就是为了使用这个 with (this)，因为要解析 {{ name }} 这样
+    //! 的模板语法时，要保证 name 属于当前组件来正确解析
     return new Function (`with (this) { return ${code}}`);
 }
 
 function genElement(el, key) {
     let exp;
-    if (exp == getAttr(el, 'v-for')) {
-        genFor(el, exp);
+    if (exp = getAttr(el, 'v-for')) {
+        return genFor(el, exp);
     } else if (exp = getAttr(el, 'v-if')) {
-        genIf(el, exp);
+        return genIf(el, exp);
     } else if (el.tag === 'template') {
         return genChildren(el);
     } else {
@@ -24,11 +29,11 @@ function genElement(el, key) {
 }
 
 function genIf(el, exp) {
-    return `(${ exp }) ? ${ getElement(el) } : ''`;
+    return `(${ exp }) ? ${ genElement(el) } : ''`;
 }
 
 function genFor(el, exp) {
-    const isMatch = exp.match(/([a-zA-Z_][\w]*)\s+(?:in|of)\s+(.*)/);
+    const inMatch = exp.match(/([a-zA-Z_][\w]*)\s+(?:in|of)\s+(.*)/);
     if (!inMatch) {
         throw new Error('Invalid v-for expression: ' + exp);
     }
@@ -46,7 +51,7 @@ function genData(el, key) {
     //? 猜测应该就是在合并 class
     //! 原来在 instance/index.js 里面实现这个 _renderClass 了，竟然忘记了，作用就是合并 class
     if (el.attrsMap[':class'] || el.attrsMap['class']) {
-        data += `class: _renderClass(${ el.attrsMap[':class'] }, "${ el.attrsMap['class'] || '' }")`;
+        data += `class: _renderClass(${ el.attrsMap[':class'] }, "${ el.attrsMap['class'] || '' }"),`;
     }
     let attrs = `attrs: {`;
     let props = `props: {`;
@@ -60,7 +65,7 @@ function genData(el, key) {
             if (name === 'class') {
                 continue;
             } else if (name === 'style') {
-                data += `style: ${ attr.value },`;
+                data += `style: ${ attr.value },`
             } else if (mustUsePropsRE.test(name)) {
                 hasProps = true;
                 props += `"${ name }": (${ attr.value }),`;
@@ -95,7 +100,7 @@ function genChildren(el) {
 
 function genNode(node) {
     if (node.tag) {
-        return getElement(node);
+        return genElement(node);
     } else {
         return genText(node);
     }

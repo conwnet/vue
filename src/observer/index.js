@@ -12,6 +12,11 @@ const arrayKeys = Object.getOwnPropertyNames(arrayMethods);
 
 /**
  * //? 不太懂，用到这里的地方再说
+ * 回来之后大概理解了，这里的注释是说，默认情况下，当一个值或者对象赋
+ * 值给响应的属性，这个新的值也会被转换为响应属性，而有些时候，我们
+ * 是不想做这种转换的，比如在 v-for 指令里面 item in [1, 2, 3]，
+ * 或者传递给子组件的 props。这些属性是不可变的，当把他们赋值给别的
+ * 响应属性时，也不应该把他们转换为响应属性，这时就用到这个了。
  */
 let shouldConvert = true;
 export function withoutConversion(fn) {
@@ -174,6 +179,7 @@ export function defineReactive(obj, key, val) {
     }
 
     // cater for pre-defined getter/setters
+    // 考虑 property 已经有了 getter / setter
     var getter = property && property.get;
     var setter = property && property.set;
 
