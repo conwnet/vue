@@ -1,7 +1,7 @@
 import { compile } from '../compiler/index';
 import { observe } from '../observer/index';
 import Watcher from '../observer/watcher';
-import { h, path } from '../vdom/index';
+import { h, patch } from '../vdom/index';
 import { nextTick, isReserved, getOuterHTML } from '../util/index';
 
 export default class Component {
@@ -11,6 +11,7 @@ export default class Component {
         const el = this._el = document.querySelector(options.el);
         const render = compile(getOuterHTML(el)); //? compile 做了哪些事情？
         this._el.innerHTML = '';
+        
         //? 这里的 _proxy 是干什么的？
         //! 本文件后面解释了，是把 options 中 data 通过 getter, setter 都放到了实例的 _data 里面
         Object.keys(options.data).forEach(key => this._proxy(key));
@@ -24,8 +25,10 @@ export default class Component {
         //! 所以在 vue 对象实例化之后再给 data 添加东西便不能监控了
         this._ob = observe(options.data);
         this._watchers = [];
-        this._watcher = new Watcher(this, render, this._update); //? 这个 watchers 就是文档中说的 watch？怎么实现的？
-        this._update(this._watcher.value);
+        this._watcher = new Watcher(this, render, () => console.log('update')); //this._update); //? 这个 watchers 就是文档中说的 watch？怎么实现的？
+        // console.log(this._watchers)
+        return ;
+        // this._update(this._watcher.value);
     }
 
     //? patch 是干啥的...猜测，根据 vtree 来渲染真实的 dom 树，this._el 存储的是更新之前的 dom 结构

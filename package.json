@@ -4,7 +4,7 @@
   "description": "## 准备按照原项目的 commit 历史一点一点自己写试试",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --watch",
+    "dev": "webpack-dev-server --watch",
     "test": "mocha --require babel-core/register --recursive",
     "build": "NODE_ENV=production node build/build.js"
   },
@@ -24,7 +24,10 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^2.0.0",
     "uglify-js": "^3.2.2",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "html-webpack-plugin": "^2.30.1"
+  }
 }

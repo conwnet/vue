@@ -39,7 +39,7 @@ export function Observer(value) {
     // 原来这个 __ob__ 是在这里出现的
     def(value, '__ob__', this);
     if (isArray(value)) {
-        var argument = hasProto
+        var augment = hasProto
             ? protoAugment
             : copyAugment;
         augment(value, arrayMethods, arrayKeys);
@@ -80,7 +80,7 @@ Observer.prototype.observeArray = function (items) {
  * @param {String} key 
  * @param {*} value 
  */
-Observer.prototype.convert = function (key, value) {
+Observer.prototype.convert = function (key, val) {
     defineReactive(this.value, key, val);
 }
 
@@ -205,7 +205,7 @@ export function defineReactive(obj, key, val) {
         },
         set: function reactiveSetter (newVal) {
             var value = getter ? getter.call(obj) : val;
-            if (newValue === value) {
+            if (newVal === value) {
                 return;
             }
             if (setter) {

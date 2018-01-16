@@ -51,4 +51,47 @@ export default function createPatchFunction(modules, api) {
             }
         }
     }
+
+    function createElm(vnode, insertedVnodeQueue) {
+        var i, thunk, data = vnode.data;
+        if (isDef(data)) {
+            if (isDef(i = data.hook) && isDef(i = i.init)) i(vnode);
+            if (isDef(i = data.vnode)) {
+                thunk = vnode;
+                vnode = i;
+            }
+        }
+        var elm, children = vnode.children, tag = vnode.sel;
+        if (isDef(tag)) {
+            elm = vnode.elm = isDef(data) && isDef(i = data.ns)
+                ? api.createElementNS(i, tag)
+                : api.createElement(tag);
+            if (Array.isArray(children)) {
+                for (i = 0; i < children.length; i++) {
+                    api.appendChild(elm, createElm(children[i], insertedVnodeQueue));
+                }
+            } else if (isPrimitive(vnode.text)) {
+                api.appendChild(elm, api.createTextNode(vnode.text));
+            }
+            for (i = 0; i < cbs.create.length; ++i) cbs.create[i](emptyNode, vnode);
+            i = vnode.hook;
+            if (isDef(i)) {
+                if (i.create) i.create(emptyNode, vnode);
+                if (i.insert) insertedVnodeQueue.push(vnode);
+            }
+        } else {
+            elm = vnode.elm = api.createTextNode(vnode.text);
+        }
+        if (isDef(thunk)) thunk.elm = vnode.elm;
+        return vnode.elm;
+    }
+    
+    function addVnodes (parentElm, before, vnodes, startIdx, endIdx, insertedVnodeQueue) {
+
+    }
 }
+
+    
+
+
+

@@ -14,7 +14,7 @@ import {
 // 这样就可以保证当用户更新执行时，DOM 已经更新了
 
 var queueIndex;
-var que  = [];
+var queue  = [];
 var userQueue = [];
 var has = {};
 var circular = {};
@@ -91,7 +91,7 @@ export function pushWatcher(watcher) {
             var q = watcher.user
             ? userQueue
             : queue;
-            has[id] = que.length;
+            has[id] = queue.length;
             q.push(watcher);
             // queue the flush
             if (!waiting) {

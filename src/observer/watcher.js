@@ -1,6 +1,6 @@
 import config from '../config';
 import Dep from './dep';
-import { pushWatcher } from 'batcher';
+import { pushWatcher } from './batcher';
 import {
     extend,
     warn,
@@ -63,7 +63,7 @@ export default function Watcher(vm, expOrFn, cb, options) {
     //? 啥玩意，不懂
     this.value = this.lazy
         ? undefined
-        : this.get()
+        : this.get();
     this.queued = this.shallow = false;
 }
 
@@ -73,6 +73,8 @@ Watcher.prototype.get = function () {
     var value;
     try {
         value = this.getter.call(scope, scope);
+        // console.log(this.getter);
+        console.log(JSON.stringify(value, null, 2));
     } catch (e) {
         if (
             process.env.NODE_ENV !== 'production' &&
@@ -141,7 +143,7 @@ Watcher.prototype.addDep = function (dep) {
     var id = dep.id;
     if (!this.newDepIds[id]) {
         this.newDepIds[id] = true;
-        this.newDepIds.push(dep);
+        this.newDeps.push(dep);
         if (!this.depIds[id]) {
             dep.addSub(this);
         }
@@ -157,7 +159,7 @@ Watcher.prototype.afterGet = function () {
     while (i--) {
         var dep = this.deps[i];
         if (!this.newDepIds[dep.id]) {
-            dep.removeSubs(this);
+            dep.removeSub(this);
         }
     }
     this.depIds = this.newDepIds;
@@ -195,5 +197,45 @@ Watcher.prototype.run = function () {
             var oldValue = this.value;
             this.value = value;
         }
+    }
+}
+
+Watcher.prototype.evaluate = function () {
+    var current = Dep.target;
+    this.value = this.get();
+    this.dirty = false;
+    Dep.target = current;
+}
+
+Watcher.prototype.depend = function () {
+    var i = this.deps.length;
+    while (i--) {
+        this.deps[i].depend();
+    }
+}
+
+Watcher.prototype.teardown = function () {
+    if (this.active) {
+        if (!this.vm._isBeingDestroyed && !this.vm._vForRemoving) {
+            this.vm._watchers.$remove(this);
+        }
+    }
+    var i = this.deps.length;
+    while (i--) {
+        this.deps[i].removeSub(this);
+    }
+    this.active = false;
+    this.vm = this.cb = this.value = null;
+}
+
+function traverse (val) {
+    var i, keys;
+    if (isArray(val)) {
+        i = val.length;
+        while (i--) traverse(val[i]);
+    } else if (isObject(val)) {
+        keys = Object.keys(val);
+        i = keys.length;
+        while (i--) traverse(val[keys[i]]);
     }
 }

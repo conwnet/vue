@@ -41,7 +41,7 @@ Dep.prototype.removeSub = function (sub) {
  * 把自己添加到目标 watcher 的依赖
  */
 Dep.prototype.depend = function () {
-    Dep.target.addSub(this);
+    Dep.target.addDep(this);
 }
 
 /**

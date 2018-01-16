@@ -354,7 +354,7 @@ export function findRef(node) {
  * @param {Element} el
  * @return {String}
  */
-export function getOuterHTML () {
+export function getOuterHTML (el) {
     if (el.outerHTML) {
         return el.outerHTML;
     } else {

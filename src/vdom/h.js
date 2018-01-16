@@ -1,5 +1,5 @@
 import VNode from './vnode';
-import { isPrimitive, isArray } from './util/index';
+import { isPrimitive, isArray } from '../util/index';
 
 function addNS(data, children) {
     data.ns = 'http://www.w3.org/2000/svg';

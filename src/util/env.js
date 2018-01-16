@@ -4,7 +4,7 @@
 export const hasProto = '__proto__' in {};
 
 // Browser environment sniffing
-export const isBrowser =
+export const inBrowser =
     typeof window !== 'undefined' &&
     Object.prototype.toString.call(window) !== '[object Object]';
 
@@ -86,7 +86,7 @@ export const nextTick = (function () {
         // Webpack 会试图插入一个 setImmediate 的 shim
         // 如果 global 变量中有这个东西，这样就能不让他 shim 了
         // 这样可以打包时省点儿体积
-        const context = isBrowser
+        const context = inBrowser
             ? window
             : typeof global !== 'undefined' ? global : {};
         timerFunc = context.setImmediate || setTimeout
