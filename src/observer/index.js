@@ -165,6 +165,8 @@ export function observe(value, vm) {
 
 /**
  * 在一个对象上定义一个可响应的属性
+ * //! 如果 obj[key] 没有 setter 的话，
+ * //! 这里的 val 参数实际上就当做一个闭包用了？
  * 
  * @param {Object} obj 
  * @param {String} key 
@@ -189,6 +191,7 @@ export function defineReactive(obj, key, val) {
         configurable: true,
         get: function reactiveGetter () {
             var value = getter ? getter.call(obj) : val;
+            // 谁调用了这个 getter，就把谁作为依赖收集起来
             if (Dep.target) {
                 dep.depend(); // 在这用到了 observer/dep.js 里面的 depend
                 if (childOb) {
@@ -214,7 +217,9 @@ export function defineReactive(obj, key, val) {
                 val = newVal;
             }
             childOb = observe(newVal);
+            // console.log(dep.subs);
             dep.notify();
         }
     });
 }
+ 

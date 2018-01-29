@@ -6,7 +6,6 @@ export const arrayMethods = Object.create(arrayProto);
 /**
  * 拦截会使数组数据发生变化的方法，然后触发事件
  */
-
 ;[
     'push',
     'pop',

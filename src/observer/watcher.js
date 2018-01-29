@@ -74,7 +74,7 @@ Watcher.prototype.get = function () {
     try {
         value = this.getter.call(scope, scope);
         // console.log(this.getter);
-        console.log(JSON.stringify(value, null, 2));
+        // console.log(JSON.stringify(value, null, 2));
     } catch (e) {
         if (
             process.env.NODE_ENV !== 'production' &&
@@ -92,13 +92,13 @@ Watcher.prototype.get = function () {
         traverse(value);
     }
     if (this.preProcess) {
-        value = this.preProcess;
+        value = this.preProcess(value);
     }
     if (this.filters) {
-        value = scope._applyFilters(value, null, this.filters,false);
+        value = scope._applyFilters(value, null, this.filters, false);
     }
     if (this.postProcess) {
-        value = this.postProcess;
+        value = this.postProcess(value);
     }
     this.afterGet();
     return value;
@@ -164,8 +164,8 @@ Watcher.prototype.afterGet = function () {
     }
     this.depIds = this.newDepIds;
     var tmp = this.deps;
-    this.deps = this.newDepIds;
-    this.newDepIds = tmp;
+    this.deps = this.newDeps;
+    this.newDeps = tmp;
 }
 
 Watcher.prototype.update = function (shallow) {
@@ -196,8 +196,25 @@ Watcher.prototype.run = function () {
         ) {
             var oldValue = this.value;
             this.value = value;
+
+            var prevError = this.prevError;
+            if (process.env.NODE_ENV !== 'production' &&
+                config.debug && prevError) {
+                this.prevError = null;
+            }
+            try {
+                this.cb.call(this.vm, value, oldValue);
+            } catch (e) {
+                nextTick(function () {
+                    throw prevError;
+                }, 0);
+                throw e;
+            }
+        } else {
+            this.cb.call(this.vm, value, oldValue);
         }
     }
+    this.queued = this.shallow = false;
 }
 
 Watcher.prototype.evaluate = function () {

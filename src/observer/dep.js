@@ -7,7 +7,7 @@ let uid = 0;
  * directives subscribing to it.
  * //? 这注释我也没看懂，等想明白了再来更新吧
  * //? 貌似是要实现一个 发布-订阅，但是这东西在哪里用到了呢
- * //! 看到了再 overver/index.js 里面用了，但是还是不知道是干啥的
+ * //! 看到了在 overver/index.js 里面用了，但是还是不知道是干啥的
  * 
  * @constructor
  */

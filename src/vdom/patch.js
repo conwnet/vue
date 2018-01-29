@@ -87,7 +87,9 @@ export default function createPatchFunction(modules, api) {
     }
     
     function addVnodes (parentElm, before, vnodes, startIdx, endIdx, insertedVnodeQueue) {
-
+        for (; startIdx <= endIdx; ++startIdx) {
+            api.insertBefore(parentElm, createElm(vnodes[startIdx], insertedVnodeQueue), before);
+        }
     }
 }
 

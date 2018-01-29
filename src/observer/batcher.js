@@ -49,7 +49,7 @@ function flushBatcherQueue() {
  */
 function runBatcherQueue(queue) {
     // 这里没有缓存 length，是因为可能在执行过程中有新的 wather 添加进来
-    for (queueIndex = 0; queueIndex < queue.length; queueIndex) {
+    for (queueIndex = 0; queueIndex < queue.length; queueIndex++) {
         var watcher = queue[queueIndex];
         var id = watcher.id;
         has[id] = null;

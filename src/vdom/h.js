@@ -29,5 +29,6 @@ export default function h(tag, b, c) {
     if (tag === 'svg') {
         addNS(data, children);
     }
+    // console.log('text', text);
     return VNode(tag, data, children, text, undefined);
 }

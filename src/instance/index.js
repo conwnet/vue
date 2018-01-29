@@ -9,7 +9,7 @@ export default class Component {
         this.$options = options;
         this._data = options.data;
         const el = this._el = document.querySelector(options.el);
-        const render = compile(getOuterHTML(el)); //? compile 做了哪些事情？
+        const render = compile(getOuterHTML(el)); //? compile 做了哪些事情？ 
         this._el.innerHTML = '';
         
         //? 这里的 _proxy 是干什么的？
@@ -25,7 +25,7 @@ export default class Component {
         //! 所以在 vue 对象实例化之后再给 data 添加东西便不能监控了
         this._ob = observe(options.data);
         this._watchers = [];
-        this._watcher = new Watcher(this, render, () => console.log('update')); //this._update); //? 这个 watchers 就是文档中说的 watch？怎么实现的？
+        this._watcher = new Watcher(this, render, this._update); //? 这个 watchers 就是文档中说的 watch？怎么实现的？
         // console.log(this._watchers)
         return ;
         // this._update(this._watcher.value);

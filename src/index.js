@@ -11,5 +11,4 @@ export default new Vue({
     }
 })
 
-
 // 去看 ./instance/index.js 了
